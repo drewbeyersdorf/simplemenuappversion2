@@ -380,7 +380,7 @@ const MEAL_TEMPLATES = {
         elevation_notes: "Lamb loin not leg, whipped feta mousse, preserved lemon, house-made za'atar",
         proteins: ['lamb-loin', 'chicken-shawarma'],
         starches: ['quinoa-pilaf', 'farro'],
-        vegetables: ['charred-eggplant', 'blistered-tomatoes', 'za'atar-vegetables'],
+        vegetables: ['charred-eggplant', 'blistered-tomatoes', 'zaatar-vegetables'],
         sauces: ['whipped-feta', 'tahini-drizzle', 'preserved-lemon-oil'],
         julieScore: 91,
         stephenScore: 94,
