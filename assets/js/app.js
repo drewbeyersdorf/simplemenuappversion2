@@ -531,30 +531,33 @@ const NAMING_PATTERNS = {
 };
 
 // ============================================
-// DOM ELEMENTS
+// DOM ELEMENTS (initialized after DOM loads)
 // ============================================
 
-const step1 = document.getElementById('step1');
-const step2 = document.getElementById('step2');
-const step3 = document.getElementById('step3');
-const moodInput = document.getElementById('moodInput');
-const analyzeBtn = document.getElementById('analyzeBtn');
-const moodEcho = document.getElementById('moodEcho');
-const suggestionsGrid = document.getElementById('suggestionsGrid');
-const loadingOverlay = document.getElementById('loadingOverlay');
+let step1, step2, step3, moodInput, analyzeBtn, moodEcho, suggestionsGrid, loadingOverlay;
+
+function initDOMElements() {
+    step1 = document.getElementById('step1');
+    step2 = document.getElementById('step2');
+    step3 = document.getElementById('step3');
+    moodInput = document.getElementById('moodInput');
+    analyzeBtn = document.getElementById('analyzeBtn');
+    moodEcho = document.getElementById('moodEcho');
+    suggestionsGrid = document.getElementById('suggestionsGrid');
+    loadingOverlay = document.getElementById('loadingOverlay');
+}
 
 // ============================================
 // NAVIGATION
 // ============================================
 
 function showStep(stepNum) {
-    [step1, step2, step3].forEach(s => s.classList.remove('active'));
-    document.getElementById(`step${stepNum}`).classList.add('active');
+    const steps = [step1, step2, step3];
+    steps.forEach(s => { if (s) s.classList.remove('active'); });
+    const targetStep = document.getElementById(`step${stepNum}`);
+    if (targetStep) targetStep.classList.add('active');
     window.scrollTo(0, 0);
 }
-
-document.getElementById('backToStep1').addEventListener('click', () => showStep(1));
-document.getElementById('backToStep2').addEventListener('click', () => showStep(2));
 
 // ============================================
 // MOOD ANALYSIS & SUGGESTION GENERATION
@@ -922,22 +925,6 @@ function showBuildDetail(suggestion) {
 // EVENT HANDLERS
 // ============================================
 
-document.querySelectorAll('.mood-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-        moodInput.value = chip.dataset.mood;
-        analyzeAndShow();
-    });
-});
-
-analyzeBtn.addEventListener('click', analyzeAndShow);
-
-moodInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        analyzeAndShow();
-    }
-});
-
 async function analyzeAndShow() {
     const mood = moodInput.value.trim();
     if (!mood) return;
@@ -968,39 +955,6 @@ async function analyzeAndShow() {
     showStep(2);
 }
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const filter = btn.dataset.filter;
-        document.querySelectorAll('.suggestion-card').forEach(card => {
-            if (filter === 'all' || card.dataset.container === filter) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    });
-});
-
-document.getElementById('copyPromptBtn').addEventListener('click', () => {
-    const prompt = document.getElementById('nanoBananaPrompt');
-    prompt.select();
-    document.execCommand('copy');
-    showToast('Prompt copied to clipboard!');
-});
-
-document.getElementById('generateImageBtn').addEventListener('click', () => {
-    showToast('Prompt copied - paste into Midjourney or Nano Banana');
-    document.getElementById('nanoBananaPrompt').select();
-    document.execCommand('copy');
-});
-
-document.getElementById('printGuideBtn').addEventListener('click', () => {
-    window.print();
-});
-
 function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'toast';
@@ -1009,13 +963,98 @@ function showToast(message) {
     setTimeout(() => toast.remove(), 3000);
 }
 
+function initEventHandlers() {
+    // Back buttons
+    const backBtn1 = document.getElementById('backToStep1');
+    const backBtn2 = document.getElementById('backToStep2');
+    if (backBtn1) backBtn1.addEventListener('click', () => showStep(1));
+    if (backBtn2) backBtn2.addEventListener('click', () => showStep(2));
+
+    // Mood chips
+    document.querySelectorAll('.mood-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            moodInput.value = chip.dataset.mood;
+            analyzeAndShow();
+        });
+    });
+
+    // Analyze button
+    if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', analyzeAndShow);
+    }
+
+    // Enter key in textarea
+    if (moodInput) {
+        moodInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                analyzeAndShow();
+            }
+        });
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.dataset.filter;
+            document.querySelectorAll('.suggestion-card').forEach(card => {
+                if (filter === 'all' || card.dataset.container === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Copy prompt button
+    const copyBtn = document.getElementById('copyPromptBtn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            const prompt = document.getElementById('nanoBananaPrompt');
+            prompt.select();
+            document.execCommand('copy');
+            showToast('Prompt copied to clipboard!');
+        });
+    }
+
+    // Generate image button
+    const genBtn = document.getElementById('generateImageBtn');
+    if (genBtn) {
+        genBtn.addEventListener('click', () => {
+            showToast('Prompt copied - paste into Midjourney or Nano Banana');
+            document.getElementById('nanoBananaPrompt').select();
+            document.execCommand('copy');
+        });
+    }
+
+    // Print guide button
+    const printBtn = document.getElementById('printGuideBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+    }
+}
+
 // ============================================
 // INITIALIZE
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Methodology Food Mood - Elevated Meal Intelligence loaded');
+
+    // Initialize DOM elements
+    initDOMElements();
+
+    // Initialize event handlers
+    initEventHandlers();
+
     console.log('Chef Philosophies:', Object.keys(CHEF_PHILOSOPHIES));
     console.log('Elevation Methodology:', ELEVATION_METHODOLOGY.core_principle);
     console.log('Weekly Beef Requirement:', WEEKLY_REQUIREMENTS.beef.required);
+    console.log('App initialized successfully');
 });
