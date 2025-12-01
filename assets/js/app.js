@@ -122,6 +122,78 @@ const ELEVATION_METHODOLOGY = {
 };
 
 // ============================================
+// SARA'S BEST PRACTICES PLATING CHECKLIST
+// Quality assurance for every build
+// ============================================
+
+const SARA_PLATING_CHECKLIST = {
+    name: "Sara's Best Practices Plating Checklist",
+
+    categories: [
+        {
+            title: "1. Ingredient Visibility",
+            checks: [
+                "Can you easily recognize each major ingredient at a glance?",
+                "Are ingredients separated by type, not mixed together too much?",
+                "Is the dish still clearly legible when viewed as a small photo/thumbnail?"
+            ]
+        },
+        {
+            title: "2. Structure & Organization",
+            checks: [
+                "Are you using defined areas, color blocks, or clear organization (not a busy 'pattern')?",
+                "Have you grouped less familiar or adventurous items together to help them stand out?",
+                "For bowls/plates with many items, have you applied 'bento box' or compartment style organization?"
+            ]
+        },
+        {
+            title: "3. Main Features",
+            checks: [
+                "Are signature or special ingredients (e.g., truffle, unique veggies, colored stalks) placed where they are immediately visible and not hidden?",
+                "Is there a section of uninterrupted grain, risotto, noodle, or salad for visual balance?"
+            ]
+        },
+        {
+            title: "4. Highlighting Meat/Proteins",
+            checks: [
+                "Are sliced meats arranged so you can see the inside (not just the outside/back)?",
+                "If there is sauce, can you still see the meat's interior?",
+                "Are the slices fanned out or shown at least partly 'open' rather than stacked or all facing the same way?"
+            ]
+        },
+        {
+            title: "5. Rectangular Items (quiche, salmon, etc.)",
+            checks: [
+                "Have you shown at least one edge or side to display its thickness or heartiness?",
+                "If one item is unfamiliar, have you angled or tilted it for a better side view?"
+            ]
+        },
+        {
+            title: "6. Light & Contrast",
+            checks: [
+                "Have you used lighting or plate color to ensure all items stand out clearly?",
+                "Is there enough contrast so ingredients don't blend too much?"
+            ]
+        },
+        {
+            title: "7. Brand & Presentation",
+            checks: [
+                "If packaging (e.g., a Methodology jar) is visible, is the logo clear and not covered by food?",
+                "For hero images, are both the branding and the ingredients legible and inviting?"
+            ]
+        }
+    ],
+
+    finalCheck: {
+        instruction: "Take a quick overhead phone photo at thumbnail size:",
+        questions: [
+            "Can you immediately identify most components?",
+            "Does the dish look appetizing and organized at a glance?"
+        ]
+    }
+};
+
+// ============================================
 // WEEKLY BEEF REQUIREMENT
 // Fixed beef protein every single week
 // ============================================
@@ -749,6 +821,44 @@ function renderPlatingSteps(suggestion) {
     `).join('');
 }
 
+function renderSaraChecklist() {
+    let html = `<div class="sara-checklist">
+        <h4 class="checklist-title">${SARA_PLATING_CHECKLIST.name}</h4>`;
+
+    SARA_PLATING_CHECKLIST.categories.forEach(category => {
+        html += `
+            <div class="checklist-category">
+                <h5 class="category-title">${category.title}</h5>
+                <div class="checklist-items">
+                    ${category.checks.map(check => `
+                        <label class="checklist-item">
+                            <input type="checkbox" class="check-input">
+                            <span class="check-text">${check}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+
+    html += `
+        <div class="checklist-final">
+            <h5 class="final-title">Final Check</h5>
+            <p class="final-instruction">${SARA_PLATING_CHECKLIST.finalCheck.instruction}</p>
+            <div class="checklist-items">
+                ${SARA_PLATING_CHECKLIST.finalCheck.questions.map(q => `
+                    <label class="checklist-item final">
+                        <input type="checkbox" class="check-input">
+                        <span class="check-text">${q}</span>
+                    </label>
+                `).join('')}
+            </div>
+        </div>
+    </div>`;
+
+    return html;
+}
+
 function generateNanoBananaPrompt(suggestion) {
     const components = Object.values(suggestion.components).filter(Boolean);
     const ingredientList = components.map(c => (c.elevatedName || c.name).toLowerCase()).join(', ');
@@ -802,6 +912,7 @@ function showBuildDetail(suggestion) {
     document.getElementById('containerPreview').innerHTML = renderBuildPreview(suggestion);
     document.getElementById('componentsList').innerHTML = renderComponents(suggestion);
     document.getElementById('platingNotes').innerHTML = renderPlatingSteps(suggestion);
+    document.getElementById('saraChecklist').innerHTML = renderSaraChecklist();
     document.getElementById('nanoBananaPrompt').value = generateNanoBananaPrompt(suggestion);
 
     showStep(3);

@@ -738,6 +738,101 @@ h4 {
     font-size: 0.9rem;
 }
 
+/* Sara's Plating Checklist */
+.sara-checklist-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.sara-checklist {
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff5f0 100%);
+    border: 2px solid #e07b7b;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.checklist-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: #c45c5c;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px solid #e8d0d0;
+}
+
+.checklist-category {
+    margin-bottom: var(--spacing-md);
+}
+
+.category-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-xs);
+}
+
+.checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.checklist-item:hover {
+    background: rgba(224, 123, 123, 0.05);
+}
+
+.check-input {
+    width: 18px;
+    height: 18px;
+    accent-color: #e07b7b;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.check-text {
+    font-size: 0.85rem;
+    color: var(--color-text);
+    line-height: 1.4;
+}
+
+.checklist-item.final .check-text {
+    font-weight: 500;
+}
+
+.checklist-final {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 2px dashed #e8d0d0;
+}
+
+.final-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #c45c5c;
+    margin-bottom: var(--spacing-xs);
+}
+
+.final-instruction {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-bottom: var(--spacing-xs);
+    font-style: italic;
+}
+
+/* Checked state styling */
+.checklist-item input:checked + .check-text {
+    text-decoration: line-through;
+    color: var(--color-muted);
+}
+
 /* Prompt Output */
 .prompt-output textarea {
     width: 100%;
